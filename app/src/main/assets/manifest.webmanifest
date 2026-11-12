@@ -1,0 +1,14 @@
+{
+  "id": "./index.html",
+  "name": "NotHub Pro – Akıllı Not Yönetimi",
+  "short_name": "NotHub Pro",
+  "description": "Notlar, görevler, OCR ve yapay zekâ destekli not asistanı.",
+  "lang": "tr-TR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f8fafc",
+  "theme_color": "#4f46e5",
+  "icons": [{"src":"icons/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+}
