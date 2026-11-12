@@ -389,7 +389,7 @@ html[data-theme="sepia"] aside,html[data-theme="sepia"] section{background:#eee2
                         <i class="fa-solid fa-arrows-rotate"></i>
                         <span class="text-[11px]">Yedekle</span>
                     </button>
-                    <button id="themeToggleBtn" class="p-2 rounded-xl text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition text-xs" title="Tema Değiştir">
+                    <button id="themeToggleBtn" class="hidden md:inline-flex p-2 rounded-xl text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition text-xs" title="Tema Değiştir">
                         <i class="fa-solid fa-moon dark:hidden text-indigo-600"></i>
                         <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
                     </button>
@@ -886,7 +886,6 @@ html[data-theme="sepia"] aside,html[data-theme="sepia"] section{background:#eee2
 
         // Application Initialization
         window.addEventListener('DOMContentLoaded', () => {
-            initTheme();
             setupEventListeners();
             renderSidebarTags();
             renderNoteList();
@@ -896,24 +895,15 @@ html[data-theme="sepia"] aside,html[data-theme="sepia"] section{background:#eee2
             }
         });
 
-        // Theme Initialization & Handler
-        function initTheme() {
-            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        }
-
-        document.getElementById('themeToggleBtn').addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                showToast('Açık tema uygulandı', 'info');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                showToast('Koyu tema uygulandı', 'info');
+        // Legacy light/dark shortcut: route through the unified theme selector.
+        // This keeps Matrix, AMOLED, Blue, Corporate and Sepia from being overridden by a stray .dark class.
+        document.getElementById('themeToggleBtn')?.addEventListener('click', () => {
+            const selector = document.getElementById('themeSelect');
+            const current = selector?.value || document.documentElement.dataset.theme || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            if (selector) {
+                selector.value = next;
+                selector.dispatchEvent(new Event('change', { bubbles: true }));
             }
         });
 
@@ -2153,7 +2143,7 @@ html[data-theme="sepia"] aside,html[data-theme="sepia"] section{background:#eee2
       if (typeof renderAttachments === 'function') renderAttachments();
     }).catch(e=>console.warn('Migrasyon:', e));
     // Restore selected theme, retaining legacy light/dark preference.
-    applyTheme(localStorage.getItem('nothub_theme_v2') || localStorage.getItem('theme') || 'light');
+    applyTheme(localStorage.getItem('nothub_theme_v2') || 'light');
     $('themeSelect')?.addEventListener('change',e=>applyTheme(e.target.value));
     $('addAttachmentBtn')?.addEventListener('click',()=>$('attachmentInput').click());
     $('attachmentInput')?.addEventListener('change',e=>{addFiles(e.target.files);e.target.value='';});
