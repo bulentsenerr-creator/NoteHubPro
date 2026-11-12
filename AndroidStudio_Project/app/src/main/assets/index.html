@@ -891,18 +891,6 @@ html[data-theme="sepia"] aside,html[data-theme="sepia"] section{background:#eee2
             }
         });
 
-        // Legacy light/dark shortcut: route through the unified theme selector.
-        // This keeps Matrix, AMOLED, Blue, Corporate and Sepia from being overridden by a stray .dark class.
-        document.getElementById('themeToggleBtn')?.addEventListener('click', () => {
-            const selector = document.getElementById('themeSelect');
-            const current = selector?.value || document.documentElement.dataset.theme || 'light';
-            const next = current === 'dark' ? 'light' : 'dark';
-            if (selector) {
-                selector.value = next;
-                selector.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-        });
-
         // Persistence Helper
         function saveToStorage() {
             try {
