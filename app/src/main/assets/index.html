@@ -5026,5 +5026,45 @@ html.focus-mode #wikiPanel{display:none!important}
 })();
 </script>
 
+
+<script id="NH_SIDEBAR_FAILSAFE_V1">
+/* Sol navigasyon için bağımsız ve güvenli olay yöneticisi */
+(function(){
+  function initSidebarFallback(){
+    const pane=document.getElementById('sidebarPane');
+    const backdrop=document.getElementById('sidebarBackdrop');
+    if(!pane || !backdrop) return;
+    function open(){
+      pane.classList.remove('-translate-x-full');
+      backdrop.classList.remove('hidden');
+    }
+    function close(){
+      pane.classList.add('-translate-x-full');
+      backdrop.classList.add('hidden');
+    }
+    document.addEventListener('click',function(e){
+      const toggle=e.target.closest('#sidebarToggleBtn');
+      const closeBtn=e.target.closest('#closeSidebarMobile');
+      const shade=e.target===backdrop || e.target.closest('#sidebarBackdrop');
+      if(toggle){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if(window.innerWidth<768){
+          if(pane.classList.contains('-translate-x-full')) open();
+          else close();
+        }else{
+          pane.classList.toggle('sidebar-collapsed');
+        }
+      }else if(closeBtn || shade){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        close();
+      }
+    },true);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initSidebarFallback,{once:true});
+  else initSidebarFallback();
+})();
+</script>
 </body>
 </html>
