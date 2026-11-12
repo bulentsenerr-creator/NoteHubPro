@@ -5026,5 +5026,22 @@ html.focus-mode #wikiPanel{display:none!important}
 })();
 </script>
 
+
+<script id="NH_SIDEBAR_FAILSAFE_V1">
+(function(){
+ function initSidebarFallback(){
+  const pane=document.getElementById('sidebarPane'),backdrop=document.getElementById('sidebarBackdrop');
+  if(!pane||!backdrop)return;
+  const open=()=>{pane.classList.remove('-translate-x-full');backdrop.classList.remove('hidden');};
+  const close=()=>{pane.classList.add('-translate-x-full');backdrop.classList.add('hidden');};
+  document.addEventListener('click',function(e){
+   const toggle=e.target.closest('#sidebarToggleBtn'),closeBtn=e.target.closest('#closeSidebarMobile'),shade=e.target===backdrop||e.target.closest('#sidebarBackdrop');
+   if(toggle){e.preventDefault();e.stopImmediatePropagation();if(innerWidth<768){pane.classList.contains('-translate-x-full')?open():close();}else pane.classList.toggle('sidebar-collapsed');}
+   else if(closeBtn||shade){e.preventDefault();e.stopImmediatePropagation();close();}
+  },true);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initSidebarFallback,{once:true});else initSidebarFallback();
+})();
+</script>
 </body>
 </html>
